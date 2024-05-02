@@ -8,7 +8,7 @@ float tmp[] = { 0.2,0.2,0.2 },tmp2[] = { 0,1,0 },bridgeY = 0.0,shipX=-50.0,shipY
 bridgeColor[] = { 0.3, 0.2, 0.05 }, frontColor[] = { 0.7, 0.5, 0.2 }, supportColor[] = { 0.5, 0.5, 1 }, sideColor[] = {0.5,0.3,.2},
 greyColor[] = { 0.4,0.4,0.4 }, redColor[] = {1,0,0},greenColor[]={0,1,0},
 blackColor[]={0,0,0}, c1 = 0.0,c2=0.0,c3=0.0,c4=0,planeX=0,planeY=0;
-bool isShipGone = false,isBridgeUp=false;
+bool isShipGone = false,isBridgeUp=false,start=false;
 int sides = 360,pos1=90,pos2=45,pos3=270;
 const float radius = 600.0f;
 const float PI = 3.14159265f;
@@ -116,15 +116,15 @@ void ocean() {
 
 }
 void railway() {
-	getTop(650, 0, 250, -50, 280, bridgeColor);
+	getTop(650, 0, 250, -50, 280, bridgeColor);//left-top-base
 	float col[] = { .4,0.4,0.4 }, col2[] = { 0.25,0.25,0.25 }, col3[] = { 0.6,0.6,0.6 };
-	getTop(50, 600, 250, 550, 280, col);
+	getTop(50, 600, 250, 550, 280, col);//left-top-concrete-base
 	float front[] = { 0.56, 0.39, 0.05 };
-	drawFront(60, 650, 0, 190, col2);
-	getTop(1000, 850, 250, 800, 280, bridgeColor);
-	getTop(50, 850, 250, 800, 280, col);
-	getSide(60, 850, 190, 800, 220,col3);
-	drawFront(60, 1000, 850, 190, col2);
+	drawFront(60, 650, 0, 190, col2);//left-front-wall
+	getTop(1000, 850, 250, 800, 280, bridgeColor);//right-top-base
+	getTop(50, 850, 250, 800, 280, col);//right-top-concrete-base
+	getSide(60, 850, 190, 800, 220,col3);//right-side-face
+	drawFront(60, 1000, 850, 190, col2);//right-front-wall
 
 }
 void railTrack() {
@@ -222,7 +222,8 @@ void drawLeftFrontBridge() {
 }
 void movingBackBridge() {
 	float col[] = { .4,0.4,0.4 }, col2[] = { 0.25,0.25,0.25 }, col3[] = { 0.6,0.6,0.6 };
-	drawBase(5, 202, 645, 250,605, 275, col2, col3, col);
+	drawBase(5, 202, 645, 250,605, 275, col2, col3, col);//railway-base
+	//railway-track
 	glBegin(GL_LINES);
 	for (int i = 0; i < 4; i++) {
 		glColor3f(0, 0, 0);
@@ -234,8 +235,7 @@ void movingBackBridge() {
 		glVertex2f(645+ i * 50 + 2, 255 + i * 0.01);
 		glVertex2f(645+ i * 50 + 2 - 30, 275 + i * 0.01);
 	}
-	float fColor[] = { 0.3, 0.2, 0.1 };
-	
+	//back-logs
 	float  frontTmp[] = { 0.25, 0.0, 0.0 } ,sideTmp[] = { 0.5, 0.0, 0.0 };
 	drawVertLog(150, 788, 275, 20, sideTmp, frontTmp, bridgeColor);
 	drawBase(15, 160, 628, 410, 625, 413, col3, sideTmp, bridgeColor);
@@ -246,9 +246,9 @@ void movingBackBridge() {
 }
 void movingFrontBridge() {
 	float  frontTmp[] = { 0.25, 0.0, 0.0 }, col3[] = { 0.6,0.6,0.6 }, sideTmp[] = { 0.5, 0.0, 0.0 };
-	drawVertLog(150, 828, 255, 20, sideTmp, frontTmp, bridgeColor);
-	drawBase(15, 160, 668, 390, 665, 393,col3, sideTmp, bridgeColor);
-	drawVertLog(150, 648, 255, 20, sideTmp, frontTmp,bridgeColor);
+	drawVertLog(150, 828, 255, 20, sideTmp, frontTmp, bridgeColor);//left-front-vertical-log
+	drawBase(15, 160, 668, 390, 665, 393,col3, sideTmp, bridgeColor);//support-log
+	drawVertLog(150, 648, 255, 20, sideTmp, frontTmp,bridgeColor);//right-vertical-log
 }
 void drawTrain(int x) {
 	glPushMatrix();
@@ -473,6 +473,7 @@ void drawCar(float c1,float c2) {
 	
 }
 void drawCity() {
+	float col1[] = { 0.3,0.3,0.3 }, col2[] = { 0.647f, 0.65f, 0.65f }, col3[] = { 0.4,0.4,0.4 };
 	int x1 = 900, y1 = 1000;
 	glPushMatrix();
 	glRotatef(65.0f, 1.0f, 0.0f, 0.0f);// Rotate around the x-axis by 60 so that roads looks 3d
@@ -504,21 +505,23 @@ void drawCity() {
 	glPopMatrix();
 	glPopMatrix();
 	//buildings
-	drawBase(400, 60, 1400, 560, 1380, 610, frontColor, sideColor, tmp);
-	drawBase(200, 50, 1340, 500, 1320, 550, frontColor, sideColor, tmp);
-	drawBase(250, 70, 1430, 430, 1410, 480, frontColor, sideColor, tmp);
+	drawBase(400, 60, 1400, 560, 1380, 610, col3, col2, tmp);
+	drawBase(200, 50, 1340, 500, 1320, 550, col3,col2, tmp);
+	drawBase(250, 70, 1430, 430, 1410, 480, col3, col2, tmp);
 	
 }
 void drawFerrisWheel() {
+	//support-base
 	drawBase(20, 170, 1030, 420, 980, 490, frontColor, sideColor, tmp);
 	glPushMatrix();
-	glRotatef(70.0f, 0.0f, 1.0f, 0.0f);
+	glRotatef(70.0f, 0.0f, 1.0f, 0.0f);//ferris-wheel-view-logic
 	glPushMatrix();
-	glTranslatef(900, 750, 800);
+	glTranslatef(900, 750, 800);//ferris-wheel-initial-position
 	float baseColor[] = { 1,1,1 };
 	float topColor[] = { 0.8, 0.8, 0.8 };
 	glLineWidth(3);
-	drawCircle(radius - 450, 50, -50, topColor);
+	drawCircle(radius - 450, 50, -50, topColor);//first-cricle
+	//ferris-wheel-carts
 	glColor3f(1, 0, 0);
 	for (int i = 0; i < sides; i++) {
 		float angle = 2.0f * PI * i / sides;
@@ -528,15 +531,15 @@ void drawFerrisWheel() {
 		drawFront(50, 50, x - 50, y - 50, tmp);
 		drawFront(50, 50, x - 30, y - 30, redColor);
 	}
-	drawCircle(radius - 450, 0, -50, baseColor);
+	drawCircle(radius - 450, 0, -50, baseColor);//second-circle
 	float curColor[] = { 0,0,0 };
-	//drawSquare(200, 50, -200, -200, curColor);
 	glPopMatrix();
 	glPopMatrix();
 }
 void lightPole() {
-	drawBase(150, 15, 1050, 275, 1045, 280, frontColor, sideColor, tmp);
-	drawBase(80, 35, 1040, 425, 1035, 430, frontColor, sideColor, tmp);
+	float col[] = { .4,0.4,0.4 }, col2[] = { 0.25,0.25,0.25 }, col3[] = { 0.6,0.6,0.6 };
+	drawBase(150, 15, 1050, 275, 1045, 280,col2 , sideColor, blackColor);
+	drawBase(80, 35, 1040, 425, 1035, 430, col3, sideColor, blackColor);
 	glPushMatrix();
 	glRotatef(30, 0, 1, 0);
 	//red-light
@@ -697,22 +700,26 @@ void drawPlane(int s) {
 	float sideCol[] = { 0.9,0.4,0 };
 	getSide(3 * s, -33 * s, 17 * s, -40 * s, 32 * s,sideCol);
 	glBegin(GL_QUADS);
+	//right-front-wings
 	glColor3f(1, 0, 0);
 	glVertex2f(-33 * s, 20 * s);
 	glVertex2f(-40 * s, 35 * s);
 	glVertex2f(-35 * s, 35 * s);
 	glVertex2f(0 * s, 20 * s);
+	//plane-side-panel
 	glColor3f(0.3, 0, 0);
 	glVertex2f(-40*s, 12*s);
 	glVertex2f(-40*s, 22*s);
 	glVertex2f(23*s, 27*s);
 	glVertex2f(23*s,23*s );
+	//plane-top-panel
 	glColor3f(0.6, 0, 0);
 	glVertex2f(-40*s, 22*s);
 	glVertex2f(-45*s, 25*s);
 	glVertex2f(18*s, 28*s);
 	glVertex2f(23*s, 27*s);
 	glColor3f(0.4,0, 0);
+	//plane-engline
 	glVertex2f(-40 * s, 12 * s);
 	glVertex2f(-40 * s, 22 * s);
 	glVertex2f(-49 * s, 17 * s);
@@ -727,13 +734,15 @@ void drawPlane(int s) {
 	glVertex2f(-40 * s, 22 * s);
 	glVertex2f(-45 * s, 25 * s);
 	glVertex2f(-52 * s, 20 * s);
+	//left-front-wing
 	glColor3f(1, 0, 0);
 	glVertex2f(0*s, 0*s);
 	glVertex2f(-30*s, 20*s);
 	glVertex2f(-10*s, 20 * s);
 	glVertex2f(05*s, 0*s);
 	glEnd();
-	drawBannerWithName(s);
+	drawBannerWithName(s);//banner-with-name
+	//left-back-wing
 	glBegin(GL_QUADS);
 	glColor3f(1, 0, 0);
 	glVertex2f(25* s, 15 * s);
@@ -741,11 +750,13 @@ void drawPlane(int s) {
 	glVertex2f(20 * s, 25 * s);
 	glVertex2f(28 * s, 15 * s);
 	glColor3f(1, 0, 0);
+	//back-top-wing
 	glVertex2f(15 * s, 27 * s);
 	glVertex2f(22 * s,  27* s);
 	glVertex2f(22 * s, 40 * s);
 	glVertex2f(19 * s, 40 * s);
 	glEnd();
+	//left-wing-depth
 	drawFront(3*s, 5*s, 0*s, -3*s, supportColor);
 	getSide(3*s, 0*s, -3*s,-30*s, 17*s,sideCol);
 	
@@ -755,14 +766,12 @@ void myDisplay(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(0.0f, 1, 1);
 	glPushMatrix();
-	//ocean
-	ocean();
+	ocean();//ocean
 	glPushMatrix();
 	glTranslatef(1700-planeX, 1000-planeY, 0);
-	drawPlane(2);
+	drawPlane(2);//plane
 	glPopMatrix();
-	///rail
-	railway();
+	railway();//rail
 	railTrack();
 	glPopMatrix();
 	//rail-static-bridge-right-portion
@@ -798,52 +807,51 @@ void myDisplay(void) {
 	//rail-static-bridge-left-front-portion
 	drawLeftFrontBridge();
 	glPopMatrix();
-	
 	glFlush();
 }
-void timer(int value) {
-	
-	c1 = 2* PI * pos1/sides ;
-	c2 = 2 * PI * pos2 / sides;
-	c3 = 2 * PI * pos3 / sides;
-	c4 = 2 * PI * pos2 / sides;
-	pos1++;
-	pos2+=2;
-	pos3+=3;
-	planeX += 3;
-	planeY+= 0.5;
-	if (planeX > 2500) {
-		planeX = 0;
-		planeY = 0;
-	}
-	if (pos1 == sides) {
-		pos1 = 0;
-	}
-	if (pos2 == sides) {
-		pos2 = 0;
-	}
-	if (pos3 == sides) {
-		pos3 = 0;
-	}
-	if (isBridgeUp) {
-		if (shipX <= 1500) {
-			shipX += 4;
-			shipY += 4;
-			if (shipX >= 360) {
-				isShipGone = true;
-			}
 
+void timer(int value) {
+	if (start) {
+		c1 = 2 * PI * pos1 / sides;
+		c2 = 2 * PI * pos2 / sides;
+		c3 = 2 * PI * pos3 / sides;
+		c4 = 2 * PI * pos2 / sides;
+		pos1++;
+		pos2 += 2;
+		pos3 += 3;
+		planeX += 3;
+		planeY += 0.5;
+		if (planeX > 2500) {
+			planeX = 0;
+			planeY = 0;
 		}
-		else {
-			shipX = -50;
-			shipY = -50;
-			bridgeY = 0;
-			trainX = 0;
-			isShipGone = false;
-			isBridgeUp = false;
+		if (pos1 == sides) {
+			pos1 = 0;
 		}
-	}
-	
+		if (pos2 == sides) {
+			pos2 = 0;
+		}
+		if (pos3 == sides) {
+			pos3 = 0;
+		}
+		if (isBridgeUp) {
+			if (shipX <= 1500) {
+				shipX += 4;
+				shipY += 4;
+				if (shipX >= 360) {
+					isShipGone = true;
+				}
+
+			}
+			else {
+				shipX = -50;
+				shipY = -50;
+				bridgeY = 0;
+				trainX = 0;
+				isShipGone = false;
+				isBridgeUp = false;
+			}
+		}
 		if (isShipGone) {
 			bridgeY -= 3;
 			if (bridgeY - 3 <= 0) {
@@ -857,9 +865,44 @@ void timer(int value) {
 		else {
 			isBridgeUp = true;
 		}
-	
+		
+	}
 	glutPostRedisplay();
 	glutTimerFunc(50, timer, 0);
+}
+void myKeyboard(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 66: // B
+		shipX = -50;
+		shipY = -50;
+		bridgeY = 0;
+		trainX = 0;
+		isShipGone = false;
+		isBridgeUp = false;
+		planeX = 0;
+		planeY = 0;
+		break;
+	case 98: // b
+		shipX = -50;
+		shipY = -50;
+		bridgeY = 0;
+		trainX = 0;
+		isShipGone = false;
+		isBridgeUp = false;
+		planeX = 0;
+		planeY = 0;
+		break;
+	case 83:
+		start=!start; // S
+		break;
+	case 115:
+		start = !start; // s
+		break;
+	default:
+		break;
+	}
 }
 int main(int argc, char** argv)
 {
@@ -870,6 +913,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("Ship Under Bridge Simulation");
 	myInit();
 	glutDisplayFunc(myDisplay);
+	glutKeyboardFunc(myKeyboard);
 	glutTimerFunc(50, timer, 0);
 	glutMainLoop();
 
